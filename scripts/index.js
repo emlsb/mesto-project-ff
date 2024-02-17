@@ -15,13 +15,13 @@ function createCard (cardData, onDelete) {
 
   const cardDelButton = cardElement.querySelector('.card__delete-button');
   cardDelButton.addEventListener('click', () => onDelete(cardElement));
-  
+
   return cardElement
 };
 
 // @todo: Функция удаления карточки
-function removeCard() {
-  document.querySelector('.card').remove()
+function removeCard(card) {
+  card.remove();
 }
 // @todo: Вывести карточки на страницу
 initialCards.forEach(function(elem) {
