@@ -1,0 +1,20 @@
+{
+  "name": "mesto-project-ff",
+  "version": "0.0.1",
+  "description": "Первая работа по JS. \r Довольно простая, реализовать создание карточки из template и так же реализовать ее удаление.\r https://github.com/emlsb/mesto-project-ff/tree/main",
+  "main": "index.js",
+  "scripts": {
+    "build": "rd /s /q dist && webpack --mode production",
+    "dev": "webpack serve"
+  },
+  "author": "Emil Sibiev",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "core-js": "^3.36.0",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
+  }
+}

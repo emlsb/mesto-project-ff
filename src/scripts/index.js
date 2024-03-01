@@ -28,3 +28,5 @@ initialCards.forEach(function(elem) {
   const card = createCard(({image: elem.link, title: elem.name}), removeCard)
   cardsContainer.append(card);
 });
+
+console.log('Hello, World!')
