@@ -30,10 +30,7 @@ function removeCard(card) {
   card.remove();
 }
 // @todo: Вывести карточки на страницу
-initialCards.forEach(function(elem) {
+initialCards.forEach(elem => {
   const card = createCard(({image: elem.link, title: elem.name}), removeCard)
   cardsContainer.append(card);
 });
-
-// @todo:
-
