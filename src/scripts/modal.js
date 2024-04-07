@@ -1,47 +1,71 @@
 const profile = document.querySelector('.profile');
+const titleName = profile.querySelector('.profile__title');
+const descriptionTitle = profile.querySelector('.profile__description');
 const editProfile = document.querySelector('.popup_type_edit');
 const addCard = document.querySelector('.popup_type_new-card');
 const popup = document.querySelectorAll('.popup');
 
+const popupImage = document.querySelector('.popup__image');
+const popupTypeImage = document.querySelector('.popup_type_image');
+const caption = document.querySelector('.popup__caption');
+
 const editForm = document.forms["edit-profile"];
+const nameInput = editForm.elements.name;
+const jobInput = editForm.elements.description;
 
 
-
-
-function openPopup(elem) {
-  const nameForm = editForm.elements.name;
-  const descriptionForm = editForm.elements.description;
-
-  nameForm.value = profile.querySelector('.profile__title').textContent;
-  descriptionForm.value = profile.querySelector('.profile__description').textContent;
+function handleFormSubmit(evt) {
+  evt.preventDefault();
   
-  elem.classList.add('popup_is-opened');
+  const newName = nameInput.value;
+  const newJob = jobInput.value;
 
+  titleName.textContent = newName;
+  descriptionTitle.textContent = newJob;
+
+  closeModal(editProfile)
 }
 
-function closePopup (elem) {
+//открытие картинки
+function openImgModal(img) {
+  popupImage.src = img.image;
+  caption.textContent = img.title;
+  openModal(popupTypeImage)
+}
+
+function openModal(elem) {
+  nameInput.value = titleName.textContent;
+  jobInput.value = descriptionTitle.textContent;
+  elem.classList.add('popup_is-opened');
+}
+
+function closeModal(elem) {
   elem.classList.remove('popup_is-opened')
 }
 
 profile.addEventListener('click', event => {
   if (event.target.classList.contains('profile__edit-button')) {
-    openPopup(editProfile)
+    openModal(editProfile)
   } else if (event.target.classList.contains('profile__add-button')) {
-    openPopup(addCard)
+    openModal(addCard)
   } 
 })
 
 popup.forEach(elem => {
   elem.addEventListener('click', evt => {
     if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup')) {
-      closePopup(elem)
+      closeModal(elem)
     }
   })
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') { 
-      closePopup(elem)
+      closeModal(elem)
     }
   })
 })
 
-export{ openPopup, closePopup }
+
+
+editForm.addEventListener('submit', handleFormSubmit)
+
+export{ openModal, closeModal, openImgModal}
