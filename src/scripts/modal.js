@@ -5,9 +5,7 @@ const editProfile = document.querySelector('.popup_type_edit');
 const addCard = document.querySelector('.popup_type_new-card');
 const popup = document.querySelectorAll('.popup');
 
-const popupImage = document.querySelector('.popup__image');
-const popupTypeImage = document.querySelector('.popup_type_image');
-const caption = document.querySelector('.popup__caption');
+
 
 const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
@@ -28,10 +26,16 @@ function handleFormSubmit(evt) {
 
 //открытие картинки
 function openImgModal(img) {
+  const popupImage = document.querySelector('.popup__image');
+  const popupTypeImage = document.querySelector('.popup_type_image');
+  const popupCaption = document.querySelector('.popup__caption');
+
   popupImage.src = img.image;
-  caption.textContent = img.title;
+  popupCaption.textContent = img.title;
   openModal(popupTypeImage)
 }
+
+
 
 function openModal(elem) {
   nameInput.value = titleName.textContent;
@@ -52,6 +56,7 @@ profile.addEventListener('click', event => {
 })
 
 popup.forEach(elem => {
+  elem.classList.add('popup_is-animated')
   elem.addEventListener('click', evt => {
     if (evt.target.classList.contains('popup__close') || evt.target.classList.contains('popup')) {
       closeModal(elem)
