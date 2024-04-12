@@ -71,6 +71,4 @@ popup.forEach(elem => {
 
 
 
-editForm.addEventListener('submit', handleFormSubmit)
-
-export{ openModal, closeModal, openImgModal}
+export{ openModal, closeModal, openImgModal, handleFormSubmit }

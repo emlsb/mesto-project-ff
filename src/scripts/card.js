@@ -1,4 +1,9 @@
+import { closeModal, openImgModal } from "./modal";
+
 const cardTemplate = document.querySelector('#card-template').content;
+const addCardForm = document.forms["new-place"];
+const addCardPopup = document.querySelector('.popup_type_new-card');
+
 
 // Функция создания карточки
 function createCard (cardData, onDelete, onLike, openImgModal) {
@@ -27,9 +32,13 @@ function removeCard(card) {
   card.remove();
 }
 
+// Кнопка лайка
 function likeCardBtn(event) {
   event.target.classList.toggle('card__like-button_is-active');
 }
 
 
+
+
 export {createCard, removeCard, likeCardBtn}
+export {addCardForm, addCardPopup}
