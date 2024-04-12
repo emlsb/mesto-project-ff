@@ -1,12 +1,6 @@
-import { titleName, descriptionTitle, nameInput, jobInput } from ".";
-
-
 //Открытие попапа
 function openModal(elem) {
-  nameInput.value = titleName.textContent;
-  jobInput.value = descriptionTitle.textContent;
   elem.classList.add('popup_is-opened');
-
   document.addEventListener('keydown', closePopupByEsc);
 }
 

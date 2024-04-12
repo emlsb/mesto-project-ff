@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
-import { createCard, removeCard, likeCardBtn, openImgModal } from './card.js';
+import { createCard, removeCard, likeCardBtn, openImgModal, addCard } from './card.js';
 
 
 
@@ -24,17 +24,6 @@ const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
-// Функция добавления карточки через кнопку
-function addCard(evt) {
-  evt.preventDefault();
-
-  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
-  cardsContainer.prepend(card)
-  titleInput.value = '';
-  linkInput.value = '';
-
-  closeModal(addCardPopup)
-}
 
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
@@ -58,6 +47,8 @@ initialCards.forEach(elem => {
 // Слушатель кнопок для открытия попапа
 profile.addEventListener('click', event => {
   if (event.target.classList.contains('profile__edit-button')) {
+    nameInput.value = titleName.textContent;
+    jobInput.value = descriptionTitle.textContent;
     openModal(editProfile)
   } else if (event.target.classList.contains('profile__add-button')) {
     openModal(addCardPopup)
@@ -77,4 +68,6 @@ editForm.addEventListener('submit', handleEditFormSubmit)
 addCardForm.addEventListener('submit', addCard)
 
 
-export {addCardForm, addCardPopup, cardTemplate, titleName, descriptionTitle, nameInput, jobInput}
+export {addCardForm, addCardPopup, cardTemplate,
+        titleName, descriptionTitle, nameInput, 
+        jobInput, titleInput, linkInput, cardsContainer}

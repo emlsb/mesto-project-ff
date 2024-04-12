@@ -1,5 +1,5 @@
-import { addCardForm, addCardPopup, cardTemplate } from ".";
-import { openModal } from "./modal";
+import { cardTemplate, titleInput, linkInput, cardsContainer, addCardPopup } from ".";
+import { openModal, closeModal } from "./modal";
 
 // Функция создания карточки
 function createCard (cardData, onDelete, onLike, openImgModal) {
@@ -44,5 +44,16 @@ function openImgModal(img) {
   openModal(popupTypeImage)
 }
 
+// Функция добавления карточки через кнопку
+function addCard(evt) {
+  evt.preventDefault();
 
-export {createCard, removeCard, likeCardBtn, openImgModal}
+  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
+  cardsContainer.prepend(card)
+  titleInput.value = '';
+  linkInput.value = '';
+
+  closeModal(addCardPopup)
+}
+
+export {createCard, removeCard, likeCardBtn, openImgModal, addCard}
