@@ -1,9 +1,5 @@
-import { closeModal, openImgModal } from "./modal";
-
-const cardTemplate = document.querySelector('#card-template').content;
-const addCardForm = document.forms["new-place"];
-const addCardPopup = document.querySelector('.popup_type_new-card');
-
+import { addCardForm, addCardPopup, cardTemplate } from ".";
+import { openModal } from "./modal";
 
 // Функция создания карточки
 function createCard (cardData, onDelete, onLike, openImgModal) {
@@ -22,7 +18,6 @@ function createCard (cardData, onDelete, onLike, openImgModal) {
     openImgModal(cardData)
   })
 
-
   return cardElement
 };
 
@@ -37,8 +32,17 @@ function likeCardBtn(event) {
   event.target.classList.toggle('card__like-button_is-active');
 }
 
+//Открытие картинки
+function openImgModal(img) {
+  const popupImage = document.querySelector('.popup__image');
+  const popupTypeImage = document.querySelector('.popup_type_image');
+  const popupCaption = document.querySelector('.popup__caption');
+
+  popupImage.src = img.image;
+  popupImage.alt = img.title
+  popupCaption.textContent = img.title;
+  openModal(popupTypeImage)
+}
 
 
-
-export {createCard, removeCard, likeCardBtn}
-export {addCardForm, addCardPopup}
+export {createCard, removeCard, likeCardBtn, openImgModal}
