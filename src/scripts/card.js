@@ -1,5 +1,4 @@
-import { cardTemplate, titleInput, linkInput, cardsContainer, addCardPopup } from ".";
-import { openModal, closeModal } from "./modal";
+import { cardTemplate } from ".";
 
 // Функция создания карточки
 function createCard (cardData, onDelete, onLike, openImgModal) {
@@ -32,28 +31,6 @@ function likeCardBtn(event) {
   event.target.classList.toggle('card__like-button_is-active');
 }
 
-//Открытие картинки
-function openImgModal(img) {
-  const popupImage = document.querySelector('.popup__image');
-  const popupTypeImage = document.querySelector('.popup_type_image');
-  const popupCaption = document.querySelector('.popup__caption');
 
-  popupImage.src = img.image;
-  popupImage.alt = img.title
-  popupCaption.textContent = img.title;
-  openModal(popupTypeImage)
-}
 
-// Функция добавления карточки через кнопку
-function addCard(evt) {
-  evt.preventDefault();
-
-  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
-  cardsContainer.prepend(card)
-  titleInput.value = '';
-  linkInput.value = '';
-
-  closeModal(addCardPopup)
-}
-
-export {createCard, removeCard, likeCardBtn, openImgModal, addCard}
+export {createCard, removeCard, likeCardBtn}

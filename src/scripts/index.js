@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
-import { createCard, removeCard, likeCardBtn, openImgModal, addCard } from './card.js';
+import { createCard, removeCard, likeCardBtn } from './card.js';
 
 
 
@@ -37,6 +37,29 @@ function handleEditFormSubmit(evt) {
   closeModal(editProfile)
 }
 
+//Открытие картинки
+function openImgModal(img) {
+  const popupImage = document.querySelector('.popup__image');
+  const popupTypeImage = document.querySelector('.popup_type_image');
+  const popupCaption = document.querySelector('.popup__caption');
+
+  popupImage.src = img.image;
+  popupImage.alt = img.title
+  popupCaption.textContent = img.title;
+  openModal(popupTypeImage)
+}
+
+// Функция добавления карточки через кнопку
+function addCard(evt) {
+  evt.preventDefault();
+
+  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
+  cardsContainer.prepend(card)
+  titleInput.value = '';
+  linkInput.value = '';
+
+  closeModal(addCardPopup)
+}
 
 // Вывод карточек на страницу
 initialCards.forEach(elem => {
@@ -70,4 +93,4 @@ addCardForm.addEventListener('submit', addCard)
 
 export {addCardForm, addCardPopup, cardTemplate,
         titleName, descriptionTitle, nameInput, 
-        jobInput, titleInput, linkInput, cardsContainer}
+        jobInput}
