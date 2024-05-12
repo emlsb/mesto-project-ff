@@ -24,7 +24,18 @@ const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
+// Валидация
+function isValid(inputElement) {
+  const pattern = /^[а-яА-Яa-zA-Z\s-]+$/;
+  if (!pattern.test(inputElement.value)) {
+    inputElement.setCustomValidity("Поле может содержать только латинские и кириллические буквы.");
+  } else {
+    inputElement.setCustomValidity(""); // Сбрасываем кастомное сообщение об ошибке
+  }
+}
 
+
+// Редактирование формы
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
   
@@ -87,8 +98,13 @@ popup.forEach(elem => {
   closePopupByEsc(elem)
 })
 
-editForm.addEventListener('submit', handleEditFormSubmit)
-addCardForm.addEventListener('submit', addCard)
+editForm.addEventListener('submit', handleEditFormSubmit);
+addCardForm.addEventListener('submit', addCard);
+
+editForm.addEventListener('input', ()=>{
+  isValid(nameInput)
+  console.log(nameInput.validity.valid)
+})
 
 
 export {addCardForm, addCardPopup, cardTemplate,
