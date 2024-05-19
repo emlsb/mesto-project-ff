@@ -2,7 +2,7 @@ import '../pages/index.css';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
-import { checkValidity } from './validation.js';
+import { enableValidation, clearValidation } from './validation.js';
 
 
 
@@ -36,7 +36,7 @@ function handleEditFormSubmit(evt) {
   titleName.textContent = newName;
   descriptionTitle.textContent = newJob;
 
-  closeModal(editProfile)
+  closeModal(editProfile);
 }
 
 //Открытие картинки
@@ -75,6 +75,14 @@ profile.addEventListener('click', event => {
     nameInput.value = titleName.textContent;
     jobInput.value = descriptionTitle.textContent;
     openModal(editProfile)
+    clearValidation(editForm, {
+      formSelector: '.popup__form',
+      inputSelector: '.popup__input',
+      submitButtonSelector: '.popup__button',
+      inactiveButtonClass: 'popup__button_disabled',
+      inputErrorClass: 'popup__input_type_error',
+      errorClass: 'popup__error_visible'
+    })
   } else if (event.target.classList.contains('profile__add-button')) {
     openModal(addCardPopup)
   } 
@@ -92,19 +100,17 @@ popup.forEach(elem => {
 editForm.addEventListener('submit', handleEditFormSubmit);
 addCardForm.addEventListener('submit', addCard);
 
-editForm.addEventListener('input', () => {
-  checkValidity(editForm, nameInput)
-})
-// enableValidation({
-//   formSelector: '.popup__form',
-//   inputSelector: '.popup__input',
-//   submitButtonSelector: '.popup__button',
-//   inactiveButtonClass: 'popup__button_disabled',
-//   inputErrorClass: 'popup__input_type_error',
-//   errorClass: 'popup__error_visible'
-// });
 
-// clearValidation(profileForm, validationConfig);
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+});
+
+
 
 export {addCardForm, addCardPopup, cardTemplate,
         titleName, descriptionTitle, nameInput, 
