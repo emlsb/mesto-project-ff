@@ -1,9 +1,8 @@
 import '../pages/index.css';
-import { initialCards } from './cards.js';
+// import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
-import { enableValidation, clearValidation } from './validation.js';
-
+import { enableValidation, clearValidation, validationConfig } from './validation.js';
 
 
 // @todo: DOM узлы
@@ -21,23 +20,51 @@ const descriptionTitle = profile.querySelector('.profile__description');
 
 const addCardPopup = document.querySelector('.popup_type_new-card');
 
+
 const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
+// Получение профиля 
+fetch('https://nomoreparties.co/v1/wff-cohort-13/users/me', {
+  method: 'GET',
+  headers: {
+    authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
+  }
+})
+  .then(res => res.json())
+  .then((data) => {
+    titleName.textContent = data.name;
+    descriptionTitle.textContent = data.about;
+  });
+
 
 // Редактирование формы
-function handleEditFormSubmit(evt) {
-  evt.preventDefault();
-  
-  const newName = nameInput.value;
-  const newJob = jobInput.value;
-
-  titleName.textContent = newName;
-  descriptionTitle.textContent = newJob;
-
-  closeModal(editProfile);
+function handleEditFormSubmit() {
+  fetch('https://nomoreparties.co/v1/wff-cohort-13/users/me', {
+    method: 'PATCH',
+    headers: {
+      authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: nameInput.value,
+      about: jobInput.value
+    })
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    titleName.textContent = data.name;
+    descriptionTitle.textContent = data.about;
+    closeModal(editProfile);
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+  });
 }
+
 
 //Открытие картинки
 function openImgModal(img) {
@@ -51,23 +78,58 @@ function openImgModal(img) {
   openModal(popupTypeImage)
 }
 
-// Функция добавления карточки через кнопку
-function addCard(evt) {
-  evt.preventDefault();
+//Получение карточек
+fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
+  method: 'GET',
+  headers: {
+    authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
+  }
+})
+  .then(res => res.json())
+  .then((data) => {
+    data.forEach(elem => {
+      const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+      cardsContainer.append(card);
+    });
+  }); 
 
-  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
-  cardsContainer.prepend(card)
-  titleInput.value = '';
-  linkInput.value = '';
 
-  closeModal(addCardPopup)
+// Функция добавления карточки
+function addCard() {
+
+  fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
+    method: 'POST',
+    headers: {
+      authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: titleInput.value,
+      link: linkInput.value
+    })
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    const card = createCard(data, removeCard, likeCardBtn, openImgModal);
+    cardsContainer.prepend(card);
+    titleInput.value = '';
+    linkInput.value = '';
+    closeModal(addCardPopup);
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+  });
 }
 
+
+
 // Вывод карточек на страницу
-initialCards.forEach(elem => {
-  const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
-  cardsContainer.append(card);
-});
+// initialCards.forEach(elem => {
+//   const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+//   cardsContainer.append(card);
+// });
 
 // Слушатель кнопок для открытия попапа
 profile.addEventListener('click', event => {
@@ -75,16 +137,14 @@ profile.addEventListener('click', event => {
     nameInput.value = titleName.textContent;
     jobInput.value = descriptionTitle.textContent;
     openModal(editProfile)
-    clearValidation(editForm, {
-      formSelector: '.popup__form',
-      inputSelector: '.popup__input',
-      submitButtonSelector: '.popup__button',
-      inactiveButtonClass: 'popup__button_disabled',
-      inputErrorClass: 'popup__input_type_error',
-      errorClass: 'popup__error_visible'
-    })
-  } else if (event.target.classList.contains('profile__add-button')) {
+    clearValidation(editForm, validationConfig)
+  } 
+
+  else if (event.target.classList.contains('profile__add-button')) {
+    titleInput.value = '';
+    linkInput.value = ''
     openModal(addCardPopup)
+    clearValidation(addCardPopup, validationConfig)
   } 
 })
 
@@ -99,16 +159,9 @@ popup.forEach(elem => {
 
 editForm.addEventListener('submit', handleEditFormSubmit);
 addCardForm.addEventListener('submit', addCard);
+enableValidation(validationConfig);
 
 
-enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-});
 
 
 

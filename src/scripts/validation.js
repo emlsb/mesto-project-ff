@@ -1,3 +1,12 @@
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
+
 // Показать ошибку
 const showInputError = (formElement, inputElement, errorMessage, config) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
@@ -14,6 +23,7 @@ function hideInputError(formElement, inputElement, config) {
   errorElement.textContent = '';
 }
 
+// Проверка валидации
 function checkInputValidity(formElement, inputElement, config) {
   if (inputElement.validity.patternMismatch) {
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
@@ -28,6 +38,7 @@ function checkInputValidity(formElement, inputElement, config) {
   }
 }
 
+// Слушатель для всех форм
 function setEventListeners(formElement, config) {
   const inputList = Array.from(formElement.querySelectorAll(config.inputSelector));
   const buttonElement = formElement.querySelector(config.submitButtonSelector);
@@ -40,6 +51,8 @@ function setEventListeners(formElement, config) {
   });
 }
 
+
+// Отслеживание состояния кнопки
 function toggleButtonState(inputList, buttonElement, config) {
   if (hasInvalidInput(inputList)) {
     buttonElement.classList.add(config.inactiveButtonClass);
@@ -55,14 +68,14 @@ function hasInvalidInput(inputList) {
     return !inputElement.validity.valid});
 }
 
-function enableValidation(validationConfig) {
-  const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
+function enableValidation(config) {
+  const formList = Array.from(document.querySelectorAll(config.formSelector));
   formList.forEach((formElement) => {
     formElement.addEventListener('submit', (evt) => {
       evt.preventDefault();
     });
 
-    setEventListeners(formElement, validationConfig);
+    setEventListeners(formElement, config);
   });
 }
 
@@ -80,4 +93,4 @@ function clearValidation(formElement, config) {
   toggleButtonState(inputList, buttonElement, config);
 }
 
-export {enableValidation, clearValidation}
+export {enableValidation, clearValidation, validationConfig}
