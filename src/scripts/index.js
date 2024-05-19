@@ -2,6 +2,7 @@ import '../pages/index.css';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
+import { checkValidity } from './validation.js';
 
 
 
@@ -23,16 +24,6 @@ const addCardPopup = document.querySelector('.popup_type_new-card');
 const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
-
-// Валидация
-function isValid(inputElement) {
-  const pattern = /^[а-яА-Яa-zA-Z\s-]+$/;
-  if (!pattern.test(inputElement.value)) {
-    inputElement.setCustomValidity("Поле может содержать только латинские и кириллические буквы.");
-  } else {
-    inputElement.setCustomValidity(""); // Сбрасываем кастомное сообщение об ошибке
-  }
-}
 
 
 // Редактирование формы
@@ -101,11 +92,19 @@ popup.forEach(elem => {
 editForm.addEventListener('submit', handleEditFormSubmit);
 addCardForm.addEventListener('submit', addCard);
 
-editForm.addEventListener('input', ()=>{
-  isValid(nameInput)
-  console.log(nameInput.validity.valid)
+editForm.addEventListener('input', () => {
+  checkValidity(editForm, nameInput)
 })
+// enableValidation({
+//   formSelector: '.popup__form',
+//   inputSelector: '.popup__input',
+//   submitButtonSelector: '.popup__button',
+//   inactiveButtonClass: 'popup__button_disabled',
+//   inputErrorClass: 'popup__input_type_error',
+//   errorClass: 'popup__error_visible'
+// });
 
+// clearValidation(profileForm, validationConfig);
 
 export {addCardForm, addCardPopup, cardTemplate,
         titleName, descriptionTitle, nameInput, 

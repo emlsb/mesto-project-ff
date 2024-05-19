@@ -1,0 +1,10 @@
+/* .form__input-error {
+  min-height: 28px;
+  color: red
+} */
+
+.form__input-error_active {
+  font-size: 12px;
+  min-height: 28px;
+  color: red
+}
