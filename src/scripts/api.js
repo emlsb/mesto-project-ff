@@ -39,23 +39,42 @@ const getProfile = () => {
     });
 }
 
+const updateProfile = (name, about) => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      likes: [],
+      name: name,
+      about: about
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
 
-export {getInitialCards, getProfile}
+      // если ошибка, отклоняем промис
+      return Promise.reject(`Ошибка: ${res.status}`);
+    });
+}
+
+export {getInitialCards, getProfile, updateProfile}
 
 // function addCard() {
 
 //   fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
-//     method: 'POST',
-//     headers: {
-//       authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3',
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify({
-//       likes: [],
-//       name: titleInput.value,
-//       link: linkInput.value
-//     })
-//   })
+  //   method: 'POST',
+  //   headers: {
+  //     authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3',
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify({
+  //     likes: [],
+  //     name: titleInput.value,
+  //     link: linkInput.value
+  //   })
+  // })
 //   .then(response => {
 //     return response.json();
 //   })

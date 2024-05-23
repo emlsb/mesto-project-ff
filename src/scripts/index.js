@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { getInitialCards, getProfile } from './api.js';
+import { getInitialCards, getProfile, updateProfile } from './api.js';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
@@ -21,16 +21,17 @@ const descriptionTitle = profile.querySelector('.profile__description');
 
 const addCardPopup = document.querySelector('.popup_type_new-card');
 
-
 const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
 
+//Обнавляем информацию в профиле
 getProfile()
   .then((dataProfile) => {
     titleName.textContent = dataProfile.name;
     descriptionTitle.textContent = dataProfile.about;
+    console.log(dataProfile)
   })
   .catch((error) => {
     console.error(error);
@@ -44,10 +45,18 @@ function handleEditFormSubmit(evt) {
   const newName = nameInput.value;
   const newJob = jobInput.value;
 
-  titleName.textContent = newName;
-  descriptionTitle.textContent = newJob;
-
-  closeModal(editProfile);
+  // Вызываем функцию обновления профиля на сервере
+  updateProfile(newName, newJob)
+    .then((dataProfile) => {
+      // Обновляем данные на странице только после успешного обновления на сервере
+      titleName.textContent = dataProfile.name;
+      descriptionTitle.textContent = dataProfile.about;
+      closeModal(editProfile);
+    })
+    .catch((error) => {
+      console.error(error);
+      // Обработка ошибки (например, показать сообщение пользователю)
+    });
 }
 
 
@@ -110,8 +119,6 @@ popup.forEach(elem => {
   })
   closePopupByEsc(elem)
 })
-
-
 
 
 //Обработка ошибки из catch
