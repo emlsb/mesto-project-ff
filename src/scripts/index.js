@@ -1,5 +1,5 @@
 import '../pages/index.css';
-// import { initialCards } from './cards.js';
+import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
 import { enableValidation, clearValidation, validationConfig } from './validation.js';
@@ -25,45 +25,21 @@ const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
-// Получение профиля 
-fetch('https://nomoreparties.co/v1/wff-cohort-13/users/me', {
-  method: 'GET',
-  headers: {
-    authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
-  }
-})
-  .then(res => res.json())
-  .then((data) => {
-    titleName.textContent = data.name;
-    descriptionTitle.textContent = data.about;
-  });
 
 
 // Редактирование формы
-function handleEditFormSubmit() {
-  fetch('https://nomoreparties.co/v1/wff-cohort-13/users/me', {
-    method: 'PATCH',
-    headers: {
-      authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: nameInput.value,
-      about: jobInput.value
-    })
-  })
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    titleName.textContent = data.name;
-    descriptionTitle.textContent = data.about;
-    closeModal(editProfile);
-  })
-  .catch(error => {
-    console.error('Ошибка:', error);
-  });
+function handleEditFormSubmit(evt) {
+  evt.preventDefault();
+  
+  const newName = nameInput.value;
+  const newJob = jobInput.value;
+
+  titleName.textContent = newName;
+  descriptionTitle.textContent = newJob;
+
+  closeModal(editProfile);
 }
+
 
 
 //Открытие картинки
@@ -78,60 +54,27 @@ function openImgModal(img) {
   openModal(popupTypeImage)
 }
 
-//Получение карточек
-fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
-  method: 'GET',
-  headers: {
-    authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
-  }
-})
-  .then(res => res.json())
-  .then((data) => {
-    data.forEach(elem => {
-      const card = createCard(({image: elem.link, title: elem.name, likes: elem.likes.length}), removeCard, likeCardBtn, openImgModal)
-      cardsContainer.append(card);
-    });
-    console.log(data)
-  }); 
 
 
 // Функция добавления карточки
-function addCard() {
+function addCard(evt) {
+  evt.preventDefault();
 
-  fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
-    method: 'POST',
-    headers: {
-      authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      likes: [],
-      name: titleInput.value,
-      link: linkInput.value
-    })
-  })
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    const card = createCard(data, removeCard, likeCardBtn, openImgModal);
-    cardsContainer.prepend(card);
-    titleInput.value = '';
-    linkInput.value = '';
-    closeModal(addCardPopup);
-  })
-  .catch(error => {
-    console.error('Ошибка:', error);
-  });
+  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
+  cardsContainer.prepend(card)
+  titleInput.value = '';
+  linkInput.value = '';
+
+  closeModal(addCardPopup)
 }
 
 
 
 // Вывод карточек на страницу
-// initialCards.forEach(elem => {
-//   const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
-//   cardsContainer.append(card);
-// });
+initialCards.forEach(elem => {
+  const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+  cardsContainer.append(card);
+});
 
 // Слушатель кнопок для открытия попапа
 profile.addEventListener('click', event => {
