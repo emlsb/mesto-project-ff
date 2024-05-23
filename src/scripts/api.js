@@ -19,9 +19,6 @@ const getInitialCards = () => {
       // если ошибка, отклоняем промис
       return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .then((dataCards) => {
-      console.log(dataCards)
-    })
 }
 
 const getProfile = () => {
@@ -44,7 +41,6 @@ const updateProfile = (name, about) => {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
-      likes: [],
       name: name,
       about: about
     })
@@ -59,7 +55,27 @@ const updateProfile = (name, about) => {
     });
 }
 
-export {getInitialCards, getProfile, updateProfile}
+const addNewCard = (nameCard, link) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify({
+      likes: [],
+      name: nameCard,
+      link: link
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+
+      // если ошибка, отклоняем промис
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+}
+
+export {getInitialCards, getProfile, updateProfile, addNewCard}
 
 // function addCard() {
 

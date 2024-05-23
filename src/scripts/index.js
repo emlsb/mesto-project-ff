@@ -1,6 +1,6 @@
 import '../pages/index.css';
-import { getInitialCards, getProfile, updateProfile } from './api.js';
-import { initialCards } from './cards.js';
+import { getInitialCards, getProfile, updateProfile, addNewCard } from './api.js';
+// import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
 import { enableValidation, clearValidation, validationConfig } from './validation.js';
@@ -38,7 +38,7 @@ getProfile()
   });
 
 
-// Редактирование формы
+// Редактирование формы профиля
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
   
@@ -48,14 +48,12 @@ function handleEditFormSubmit(evt) {
   // Вызываем функцию обновления профиля на сервере
   updateProfile(newName, newJob)
     .then((dataProfile) => {
-      // Обновляем данные на странице только после успешного обновления на сервере
       titleName.textContent = dataProfile.name;
       descriptionTitle.textContent = dataProfile.about;
       closeModal(editProfile);
     })
     .catch((error) => {
       console.error(error);
-      // Обработка ошибки (например, показать сообщение пользователю)
     });
 }
 
@@ -72,27 +70,58 @@ function openImgModal(img) {
   openModal(popupTypeImage)
 }
 
-
-
-// Функция добавления карточки
 function addCard(evt) {
   evt.preventDefault();
 
-  const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
-  cardsContainer.prepend(card)
-  titleInput.value = '';
-  linkInput.value = '';
+  const nameCard = titleInput.value;
+  const link = linkInput.value;
 
-  closeModal(addCardPopup)
+  // Вызываем функцию добавления карточки на сервере
+  addNewCard(nameCard, link)
+    .then((cardData) => {
+      const card = createCard({ image: cardData.link, title: cardData.name }, removeCard, likeCardBtn, openImgModal);
+      cardsContainer.prepend(card);
+      titleInput.value = '';
+      linkInput.value = '';
+      closeModal(addCardPopup);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 
+// Функция добавления карточки
+// function addCard(evt) {
+//   evt.preventDefault();
+
+//   const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
+//   cardsContainer.prepend(card)
+//   titleInput.value = '';
+//   linkInput.value = '';
+
+//   closeModal(addCardPopup)
+// }
+
+
+//Вывод карточек на страницу
+getInitialCards()
+  .then((dataCards) => {
+    console.log(dataCards)
+    dataCards.forEach(elem => {
+      const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+      cardsContainer.append(card);
+    });
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  });
 
 // Вывод карточек на страницу
-initialCards.forEach(elem => {
-  const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
-  cardsContainer.append(card);
-});
+// initialCards.forEach(elem => {
+//   const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+//   cardsContainer.append(card);
+// });
 
 // Слушатель кнопок для открытия попапа
 profile.addEventListener('click', event => {
@@ -120,15 +149,6 @@ popup.forEach(elem => {
   closePopupByEsc(elem)
 })
 
-
-//Обработка ошибки из catch
-getInitialCards()
-  .then((result) => {
-    // обрабатываем результат
-  })
-  .catch((err) => {
-    console.log(err); // выводим ошибку в консоль
-  });
 
 
 editForm.addEventListener('submit', handleEditFormSubmit);
