@@ -88,9 +88,10 @@ fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
   .then(res => res.json())
   .then((data) => {
     data.forEach(elem => {
-      const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+      const card = createCard(({image: elem.link, title: elem.name, likes: elem.likes.length}), removeCard, likeCardBtn, openImgModal)
       cardsContainer.append(card);
     });
+    console.log(data)
   }); 
 
 
@@ -104,6 +105,7 @@ function addCard() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
+      likes: [],
       name: titleInput.value,
       link: linkInput.value
     })
