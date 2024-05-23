@@ -6,8 +6,27 @@ const config = {
   }
 }
 
-export const getInitialCards = () => {
+const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
+    method: 'GET',
+    headers: config.headers
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+
+      // если ошибка, отклоняем промис
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .then((dataCards) => {
+      console.log(dataCards)
+    })
+}
+
+const getProfile = () => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    method: 'GET',
     headers: config.headers
   })
     .then(res => {
@@ -20,6 +39,8 @@ export const getInitialCards = () => {
     });
 }
 
+
+export {getInitialCards, getProfile}
 
 // function addCard() {
 
@@ -78,30 +99,30 @@ export const getInitialCards = () => {
 
 
 // Получение профиля 
-fetch('https://nomoreparties.co/v1/wff-cohort-13/users/me', {
-  method: 'GET',
-  headers: {
-    authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
-  }
-})
-  .then(res => res.json())
-  .then((data) => {
-    titleName.textContent = data.name;
-    descriptionTitle.textContent = data.about;
-  });
+// fetch('https://nomoreparties.co/v1/wff-cohort-13/users/me', {
+//   method: 'GET',
+//   headers: {
+//     authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
+//   }
+// })
+//   .then(res => res.json())
+//   .then((data) => {
+//     titleName.textContent = data.name;
+//     descriptionTitle.textContent = data.about;
+//   });
 
-//Получение карточек
-fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
-  method: 'GET',
-  headers: {
-    authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
-  }
-})
-  .then(res => res.json())
-  .then((data) => {
-    data.forEach(elem => {
-      const card = createCard(({image: elem.link, title: elem.name, likes: elem.likes.length}), removeCard, likeCardBtn, openImgModal)
-      cardsContainer.append(card);
-    });
-    console.log(data)
-  }); 
+// //Получение карточек
+// fetch('https://nomoreparties.co/v1/wff-cohort-13/cards', {
+//   method: 'GET',
+//   headers: {
+//     authorization: '9d5d6fa7-0659-457b-9e89-3e8b259997b3'
+//   }
+// })
+//   .then(res => res.json())
+//   .then((data) => {
+//     data.forEach(elem => {
+//       const card = createCard(({image: elem.link, title: elem.name, likes: elem.likes.length}), removeCard, likeCardBtn, openImgModal)
+//       cardsContainer.append(card);
+//     });
+//     console.log(data)
+//   }); 

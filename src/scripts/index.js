@@ -1,4 +1,5 @@
 import '../pages/index.css';
+import { getInitialCards, getProfile } from './api.js';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
@@ -26,6 +27,15 @@ const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
 
+getProfile()
+  .then((dataProfile) => {
+    titleName.textContent = dataProfile.name;
+    descriptionTitle.textContent = dataProfile.about;
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
 
 // Редактирование формы
 function handleEditFormSubmit(evt) {
@@ -39,7 +49,6 @@ function handleEditFormSubmit(evt) {
 
   closeModal(editProfile);
 }
-
 
 
 //Открытие картинки
@@ -101,6 +110,19 @@ popup.forEach(elem => {
   })
   closePopupByEsc(elem)
 })
+
+
+
+
+//Обработка ошибки из catch
+getInitialCards()
+  .then((result) => {
+    // обрабатываем результат
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  });
+
 
 editForm.addEventListener('submit', handleEditFormSubmit);
 addCardForm.addEventListener('submit', addCard);
