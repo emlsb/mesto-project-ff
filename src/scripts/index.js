@@ -79,8 +79,13 @@ function addCard(evt) {
   // Вызываем функцию добавления карточки на сервере
   addNewCard(nameCard, link)
     .then((cardData) => {
-      const card = createCard({ image: cardData.link, title: cardData.name }, removeCard, likeCardBtn, openImgModal);
+      const card = createCard({ 
+        image: cardData.link, 
+        title: cardData.name, 
+        likes: cardData.likes
+      }, removeCard, likeCardBtn, openImgModal);
       cardsContainer.prepend(card);
+      console.log(cardData.likes)
       titleInput.value = '';
       linkInput.value = '';
       closeModal(addCardPopup);
@@ -90,26 +95,16 @@ function addCard(evt) {
     });
 }
 
-
-// Функция добавления карточки
-// function addCard(evt) {
-//   evt.preventDefault();
-
-//   const card = createCard(({image: linkInput.value, title: titleInput.value}), removeCard, likeCardBtn, openImgModal)
-//   cardsContainer.prepend(card)
-//   titleInput.value = '';
-//   linkInput.value = '';
-
-//   closeModal(addCardPopup)
-// }
-
-
 //Вывод карточек на страницу
 getInitialCards()
   .then((dataCards) => {
     console.log(dataCards)
     dataCards.forEach(elem => {
-      const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
+      const card = createCard(({
+        image: elem.link,
+        title: elem.name,
+        likes: elem.likes
+      }), removeCard, likeCardBtn, openImgModal)
       cardsContainer.append(card);
     });
   })
@@ -117,11 +112,6 @@ getInitialCards()
     console.log(err); // выводим ошибку в консоль
   });
 
-// Вывод карточек на страницу
-// initialCards.forEach(elem => {
-//   const card = createCard(({image: elem.link, title: elem.name}), removeCard, likeCardBtn, openImgModal)
-//   cardsContainer.append(card);
-// });
 
 // Слушатель кнопок для открытия попапа
 profile.addEventListener('click', event => {
@@ -154,7 +144,6 @@ popup.forEach(elem => {
 editForm.addEventListener('submit', handleEditFormSubmit);
 addCardForm.addEventListener('submit', addCard);
 enableValidation(validationConfig);
-
 
 
 
