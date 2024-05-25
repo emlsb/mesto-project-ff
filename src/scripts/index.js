@@ -5,7 +5,6 @@ import { openModal, closeModal, closePopupByOverlay, closePopupByEsc } from './m
 import { createCard, removeCard, likeCardBtn } from './card.js';
 import { enableValidation, clearValidation, validationConfig } from './validation.js';
 
-
 // @todo: DOM узлы
 const cardTemplate = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
@@ -26,12 +25,27 @@ const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
 
-//Обнавляем информацию в профиле
-getProfile()
-  .then((dataProfile) => {
-    titleName.textContent = dataProfile.name;
-    descriptionTitle.textContent = dataProfile.about;
-    console.log(dataProfile)
+//Вывод на страницу карточек и профиля
+Promise.all([getProfile(), getInitialCards()])
+  .then(([profileData, cards]) => {
+    const currentUserId = profileData._id;
+
+    // Обновление профиля
+    titleName.textContent = profileData.name;
+    descriptionTitle.textContent = profileData.about;
+
+    // Создание карточек
+    console.log(cards)
+    cards.forEach((cardData) => {
+      const card = createCard({
+        image: cardData.link,
+        title: cardData.name,
+        likes: cardData.likes,
+        owner: cardData.owner
+      }, removeCard, likeCardBtn, openImgModal, currentUserId);
+
+      cardsContainer.append(card);
+    });
   })
   .catch((error) => {
     console.error(error);
@@ -70,47 +84,85 @@ function openImgModal(img) {
   openModal(popupTypeImage)
 }
 
+//Добаление карточки
 function addCard(evt) {
   evt.preventDefault();
 
   const nameCard = titleInput.value;
   const link = linkInput.value;
 
-  // Вызываем функцию добавления карточки на сервере
-  addNewCard(nameCard, link)
-    .then((cardData) => {
-      const card = createCard({ 
-        image: cardData.link, 
-        title: cardData.name, 
-        likes: cardData.likes
-      }, removeCard, likeCardBtn, openImgModal);
-      cardsContainer.prepend(card);
-      titleInput.value = '';
-      linkInput.value = '';
-      closeModal(addCardPopup);
+  // Получение данных профиля пользователя
+  getProfile()
+    .then(profileData => {
+      const currentUserId = profileData._id;
+
+      // Вызываем функцию добавления карточки на сервере
+      addNewCard(nameCard, link)
+        .then((cardData) => {
+          const card = createCard({ 
+            image: cardData.link, 
+            title: cardData.name, 
+            likes: cardData.likes,
+            owner: cardData.owner
+          }, removeCard, likeCardBtn, openImgModal, currentUserId);
+          
+          cardsContainer.prepend(card);
+          titleInput.value = '';
+          linkInput.value = '';
+          closeModal(addCardPopup);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     })
-    .catch((error) => {
+    .catch(error => {
       console.error(error);
     });
 }
 
-//Вывод карточек на страницу
-getInitialCards()
-  .then((dataCards) => {
-    console.log(dataCards)
-    dataCards.forEach(elem => {
-      const card = createCard(({
-        image: elem.link,
-        title: elem.name,
-        likes: elem.likes,
-        id: elem._id
-      }), removeCard, likeCardBtn, openImgModal)
-      cardsContainer.append(card);
-    });
-  })
-  .catch((err) => {
-    console.log(err); // выводим ошибку в консоль
-  });
+
+// function addCard(evt) {
+//   evt.preventDefault();
+
+//   const nameCard = titleInput.value;
+//   const link = linkInput.value;
+
+//   // Вызываем функцию добавления карточки на сервере
+//   addNewCard(nameCard, link)
+//     .then((cardData) => {
+//       const card = createCard({ 
+//         image: cardData.link, 
+//         title: cardData.name, 
+//         likes: cardData.likes
+//       }, removeCard, likeCardBtn, openImgModal);
+//       cardsContainer.prepend(card);
+//       titleInput.value = '';
+//       linkInput.value = '';
+//       closeModal(addCardPopup);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
+
+
+
+// getInitialCards()
+//   .then((dataCards) => {
+//     console.log(dataCards)
+//     dataCards.forEach(elem => {
+//       const card = createCard(({
+//         image: elem.link,
+//         title: elem.name,
+//         likes: elem.likes,
+//         id: elem._id
+//       }), removeCard, likeCardBtn, openImgModal)
+//       cardsContainer.append(card);
+//     });
+//   })
+//   .catch((err) => {
+//     console.log(err); // выводим ошибку в консоль
+//   });
 
 
 // Слушатель кнопок для открытия попапа

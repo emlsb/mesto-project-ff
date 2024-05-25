@@ -2,7 +2,7 @@ import { cardTemplate } from ".";
 import { deleteCard } from "./api";
 
 // Функция создания карточки
-function createCard (cardData, onDelete, onLike, openImgModal) {
+function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const cardDelButton = cardElement.querySelector('.card__delete-button');
   const likeBtn = cardElement.querySelector('.card__like-button');
@@ -14,7 +14,12 @@ function createCard (cardData, onDelete, onLike, openImgModal) {
   cardImage.src = cardData.image;
   likeCount.textContent = cardData.likes.length;
 
-  cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData.id));
+  // cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData.id));
+  if (cardData.owner._id === currentUserId) {
+    cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData._id));
+  } else {
+    cardDelButton.style.display = 'none';
+  }
   likeBtn.addEventListener('click', onLike);
   cardImage.addEventListener('click', () => {
     openImgModal(cardData)
@@ -31,9 +36,10 @@ function removeCard(cardElement, cardId) {
       cardElement.remove();
     })
     .catch(err => {
-      console.log(err);
+      console.error(`Не удалось удалить карточку: ${err}`);
     });
 }
+
 
 // Кнопка лайка
 function likeCardBtn(event) {
