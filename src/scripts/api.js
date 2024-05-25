@@ -88,7 +88,20 @@ const deleteCard = (cardId) => {
   });
 };
 
+const onLike = (cardId, isLiked) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: isLiked ? 'DELETE' : 'PUT',
+    headers: config.headers
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
 
 
 
-export {getInitialCards, getProfile, updateProfile, addNewCard, deleteCard}
+
+export {getInitialCards, getProfile, updateProfile, addNewCard, deleteCard, onLike}

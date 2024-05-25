@@ -12,7 +12,6 @@ const titleInput = addCardForm.elements["place-name"];
 const linkInput = addCardForm.elements.link;
 const popup = document.querySelectorAll('.popup');
 const editProfile = document.querySelector('.popup_type_edit');
-const iconDelete = document.querySelector('.card__delete-button');
 const deletePopup = document.querySelector('.popup_type_delete')
 const delBtn = document.querySelector('.delete_btn')
 
@@ -161,4 +160,4 @@ enableValidation(validationConfig);
 
 export {addCardForm, addCardPopup, cardTemplate,
         titleName, descriptionTitle, nameInput, 
-        jobInput, iconDelete, deletePopup, delBtn}
+        jobInput, deletePopup, delBtn}
