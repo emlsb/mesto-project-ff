@@ -12,6 +12,9 @@ const titleInput = addCardForm.elements["place-name"];
 const linkInput = addCardForm.elements.link;
 const popup = document.querySelectorAll('.popup');
 const editProfile = document.querySelector('.popup_type_edit');
+const iconDelete = document.querySelector('.card__delete-button');
+const deletePopup = document.querySelector('.popup_type_delete')
+const delBtn = document.querySelector('.delete_btn')
 
 const profile = document.querySelector('.profile');
 const titleName = profile.querySelector('.profile__title');
@@ -40,7 +43,7 @@ Promise.all([getProfile(), getInitialCards()])
         image: cardData.link,
         title: cardData.name,
         likes: cardData.likes,
-        id: cardData._id,
+        _id: cardData._id,
         owner: cardData.owner
       }, removeCard, likeCardBtn, openImgModal, currentUserId);
 
@@ -102,7 +105,7 @@ function addCard(evt) {
             image: cardData.link, 
             title: cardData.name, 
             likes: cardData.likes,
-            id: cardData._id,
+            _id: cardData._id,
             owner: cardData.owner
           }, removeCard, likeCardBtn, openImgModal, currentUserId);
           
@@ -158,4 +161,4 @@ enableValidation(validationConfig);
 
 export {addCardForm, addCardPopup, cardTemplate,
         titleName, descriptionTitle, nameInput, 
-        jobInput}
+        jobInput, iconDelete, deletePopup, delBtn}

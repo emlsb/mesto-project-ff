@@ -1,5 +1,6 @@
-import { cardTemplate } from ".";
+import { cardTemplate, iconDelete, deletePopup, delBtn } from ".";
 import { deleteCard } from "./api";
+import { closeModal, openModal } from "./modal";
 
 // Функция создания карточки
 function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
@@ -14,9 +15,14 @@ function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
   cardImage.src = cardData.image;
   likeCount.textContent = cardData.likes.length;
 
-  // cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData.id));
   if (cardData.owner._id === currentUserId) {
-    cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData.id));
+    cardDelButton.addEventListener('click', () => {
+      openModal(deletePopup)
+      delBtn.addEventListener('click', () => {
+        onDelete(cardElement, cardData._id);
+        closeModal(deletePopup)
+      })
+    });
   } else {
     cardDelButton.style.display = 'none';
   }
@@ -38,6 +44,10 @@ function removeCard(cardElement, cardId) {
     .catch(err => {
       console.error(`Не удалось удалить карточку: ${err}`);
     });
+}
+
+function openDeletePopup(evt) {
+  evt.target
 }
 
 
