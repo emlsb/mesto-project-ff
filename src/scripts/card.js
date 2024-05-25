@@ -63,16 +63,7 @@ function likeCardBtn(likeBtn, cardId, likeCountElement) {
     console.error(`Не удалось оценить: ${err}`);
   });
 }
-// function likeCardBtn(likeBtn, cardId, likeCountElement) {
-//   onLike(cardId)
-//   .then((updatedCard) => {
-//     likeBtn.classList.toggle('card__like-button_is-active');
-//     likeCountElement.textContent = updatedCard.likes.length;
-//   })
-//   .catch(err => {
-//     console.error(`Не удалось оценить: ${err}`);
-//   });
-// }
+
 
 
 

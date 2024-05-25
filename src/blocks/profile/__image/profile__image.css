@@ -7,7 +7,14 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  position: relative;
 }
+
+/* .profile__image:hover{
+  width: 26px;
+  height: 26px;
+  background: url('/src/images/Vector.png');
+} */
 
 @media screen and (max-width: 740px) {
   .profile__image {
