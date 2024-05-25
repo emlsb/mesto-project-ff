@@ -85,7 +85,6 @@ function addCard(evt) {
         likes: cardData.likes
       }, removeCard, likeCardBtn, openImgModal);
       cardsContainer.prepend(card);
-      console.log(cardData.likes)
       titleInput.value = '';
       linkInput.value = '';
       closeModal(addCardPopup);
@@ -103,7 +102,8 @@ getInitialCards()
       const card = createCard(({
         image: elem.link,
         title: elem.name,
-        likes: elem.likes
+        likes: elem.likes,
+        id: elem._id
       }), removeCard, likeCardBtn, openImgModal)
       cardsContainer.append(card);
     });
