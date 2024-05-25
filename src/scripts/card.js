@@ -16,7 +16,7 @@ function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
 
   // cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData.id));
   if (cardData.owner._id === currentUserId) {
-    cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData._id));
+    cardDelButton.addEventListener('click', () => onDelete(cardElement, cardData.id));
   } else {
     cardDelButton.style.display = 'none';
   }
