@@ -3,7 +3,7 @@ import { getInitialCards, getProfile, updateProfile, addNewCard, changeAvatar } 
 import { openModal, closeModal, closePopupByOverlay } from './modal.js';
 import { createCard, removeCard, likeCardBtn } from './card.js';
 import { enableValidation, clearValidation, validationConfig } from './validation.js';
-import { handleSubmit, renderLoading } from './utils.js';
+import { handleSubmit } from './utils.js';
 
 // @todo: DOM узлы
 const cardsContainer = document.querySelector('.places__list');
@@ -47,6 +47,7 @@ Promise.all([getProfile(), getInitialCards()])
     const currentUserId = profileData._id;
 
     // Обновление профиля
+    console.log(cards)
     titleName.textContent = profileData.name;
     descriptionTitle.textContent = profileData.about;
     profileImage.src = profileData.avatar;

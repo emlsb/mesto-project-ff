@@ -1,11 +1,14 @@
-const cardTemplate = document.querySelector('#card-template').content;
-const deletePopup = document.querySelector('.popup_type_delete');
-const delBtn = document.querySelector('.delete_btn');
 import { deleteCard, onLike } from "./api";
 import { closeModal, openModal } from "./modal";
 
+const cardTemplate = document.querySelector('#card-template').content;
+const deletePopup = document.querySelector('.popup_type_delete');
+const delBtn = document.querySelector('.delete_btn');
+let currentCardElement = null;
+let currentCardId = null;
+
 // Функция создания карточки
-function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
+function createCard (cardData, onDelete, OnLike, openImgModal, currentUserId) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   const cardDelButton = cardElement.querySelector('.card__delete-button');
   const likeBtn = cardElement.querySelector('.card__like-button');
@@ -20,8 +23,14 @@ function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
   if (cardData.owner._id === currentUserId) {
     cardDelButton.addEventListener('click', () => {
       openModal(deletePopup)
+      currentCardElement = cardElement;
+      currentCardId = cardData._id;
       delBtn.addEventListener('click', () => {
-        onDelete(cardElement, cardData._id);
+        if (currentCardElement && currentCardId) {
+          onDelete(currentCardElement, currentCardId);
+          currentCardElement = null;
+          currentCardId = null;
+        }
       })
     });
   } else {
@@ -52,6 +61,7 @@ function removeCard(cardElement, cardId) {
     });
     closeModal(deletePopup)
 }
+
 
 // Кнопка лайка
 function likeCardBtn(likeBtn, cardId, likeCountElement) {
