@@ -1,4 +1,6 @@
-import { cardTemplate, deletePopup, delBtn } from ".";
+const cardTemplate = document.querySelector('#card-template').content;
+const deletePopup = document.querySelector('.popup_type_delete');
+const delBtn = document.querySelector('.delete_btn');
 import { deleteCard, onLike } from "./api";
 import { closeModal, openModal } from "./modal";
 
