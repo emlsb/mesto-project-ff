@@ -20,7 +20,6 @@ function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
       openModal(deletePopup)
       delBtn.addEventListener('click', () => {
         onDelete(cardElement, cardData._id);
-        closeModal(deletePopup)
       })
     });
   } else {
@@ -49,6 +48,7 @@ function removeCard(cardElement, cardId) {
     .catch(err => {
       console.error(`Не удалось удалить карточку: ${err}`);
     });
+    closeModal(deletePopup)
 }
 
 // Кнопка лайка

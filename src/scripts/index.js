@@ -46,7 +46,6 @@ Promise.all([getProfile(), getInitialCards()])
     const currentUserId = profileData._id;
 
     // Обновление профиля
-    console.log(profileData)
     titleName.textContent = profileData.name;
     descriptionTitle.textContent = profileData.about;
     profileImage.src = profileData.avatar;
@@ -84,7 +83,6 @@ function handleEditFormSubmit(evt) {
     .then((dataProfile) => {
       titleName.textContent = dataProfile.name;
       descriptionTitle.textContent = dataProfile.about;
-      closeModal(editProfile);
     })
     .catch((error) => {
       console.error(error);
@@ -92,6 +90,7 @@ function handleEditFormSubmit(evt) {
     .finally(() => {
       renderLoading(submitButton, false);
     });
+    closeModal(editProfile);
 }
 
 // Функция для обновления аватара
@@ -105,7 +104,6 @@ function handleAvatarFormSubmit(evt) {
   changeAvatar(newAvatarUrl)
     .then((data) => {
       profileImage.src = data.avatar;
-      closeModal(editAvatarPopup)
     })
     .catch((error) => {
       console.error('Ошибка при изменении аватара:', error);
@@ -113,6 +111,7 @@ function handleAvatarFormSubmit(evt) {
     .finally(() => {
       renderLoading(submitButton, false); // Снимаем состояние загрузки
     });
+    closeModal(editAvatarPopup)
 }
 
 
@@ -156,11 +155,11 @@ function addCard(evt) {
           cardsContainer.prepend(card);
           titleInput.value = '';
           linkInput.value = '';
-          closeModal(addCardPopup);
         })
         .catch((error) => {
           console.error(error);
         });
+        closeModal(addCardPopup);
     })
     .catch(error => {
       console.error(error);
