@@ -28,6 +28,9 @@ function handleSubmit(request, evt, loadingText = "Сохранение...") {
      .catch((err) => {
        console.error(`Ошибка: ${err}`);
      })
+     .finally(() => {
+      renderLoading(false, submitButton, initialText);
+    });
 }
 
 export {renderLoading, checkResponse, handleSubmit}

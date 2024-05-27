@@ -1,7 +1,7 @@
 import '../pages/index.css';
 import { getInitialCards, getProfile, updateProfile, addNewCard, changeAvatar } from './api.js';
 import { openModal, closeModal, closePopupByOverlay } from './modal.js';
-import { createCard, removeCard, likeCardBtn } from './card.js';
+import { createCard, removeCard, likeCardBtn, confirmDelBtn, currentCardElement, currentCardId } from './card.js';
 import { enableValidation, clearValidation, validationConfig } from './validation.js';
 import { handleSubmit } from './utils.js';
 
@@ -20,7 +20,7 @@ const editForm = document.forms["edit-profile"];
 const nameInput = editForm.elements.name;
 const jobInput = editForm.elements.description;
 
-const popup = document.querySelectorAll('.popup');
+const popups = document.querySelectorAll('.popup');
 const editProfile = document.querySelector('.popup_type_edit');
 
 const popupImage = document.querySelector('.popup__image');
@@ -39,6 +39,7 @@ const editAvatarPopup = document.querySelector('.popup_type_new-avatar');
 //Кнопки
 const editButton = profile.querySelector('.profile__edit-button');
 const addButton = profile.querySelector('.profile__add-button');
+const delBtn = document.querySelector('.delete_btn');
 
 
 //Вывод на страницу карточек и профиля
@@ -60,13 +61,15 @@ Promise.all([getProfile(), getInitialCards()])
         likes: cardData.likes,
         _id: cardData._id,
         owner: cardData.owner
-      }, removeCard, likeCardBtn, openImgModal, currentUserId);
+      }, likeCardBtn, openImgModal, currentUserId);
       cardsContainer.append(card);
     });
   })
   .catch((error) => {
     console.error(error);
-  });
+});
+
+
 
 // Редактирование формы профиля
 function handleEditFormSubmit(evt) {
@@ -81,13 +84,10 @@ function handleEditFormSubmit(evt) {
     .then((dataProfile) => {
       titleName.textContent = dataProfile.name;
       descriptionTitle.textContent = dataProfile.about;
-    })
-    .catch((error) => {
-      console.error(error);
+      closeModal(editProfile);
     })
   }
   handleSubmit(makeRequest, evt)
-  closeModal(editProfile);
 }
 
 // Функция для обновления аватара
@@ -99,13 +99,10 @@ function handleAvatarFormSubmit(evt) {
     return changeAvatar(newAvatarUrl)
     .then((data) => {
       profileImage.src = data.avatar;
-    })
-    .catch((error) => {
-      console.error('Ошибка при изменении аватара:', error);
+      closeModal(editAvatarPopup)
     })
   }
   handleSubmit(makeRequest, evt)
-  closeModal(editAvatarPopup)
 }
 
 //Открытие картинки
@@ -133,30 +130,25 @@ function addCard(evt) {
         likes: cardData.likes,
         _id: cardData._id,
         owner: cardData.owner
-      }, removeCard, likeCardBtn, openImgModal, cardData.owner._id); 
+      }, likeCardBtn, openImgModal, cardData.owner._id); 
       cardsContainer.prepend(card);
+      closeModal(addCardPopup);
     })
-    .catch((error) => {
-      console.error(error);
-    });
   }
   handleSubmit(makeRequest, evt)
-  closeModal(addCardPopup);
 }
 
 
-
 // Слушатели
-popup.forEach(elem => {
+popups.forEach(elem => {
   elem.classList.add('popup_is-animated')
-  elem.addEventListener('click', evt => {
-    closePopupByOverlay(evt)
-  })
+  elem.addEventListener('click', closePopupByOverlay)
 })
 
 profileImage.addEventListener('click', () => {
   newAvatarForm.reset()
   openModal(editAvatarPopup)
+  clearValidation(newAvatarForm, validationConfig)
 })
 
 editButton.addEventListener('click', () => {
@@ -169,8 +161,16 @@ editButton.addEventListener('click', () => {
 addButton.addEventListener('click', () => {
   addCardForm.reset()
   openModal(addCardPopup)
-  clearValidation(addCardPopup, validationConfig)
+  clearValidation(addCardForm, validationConfig)
 })
+
+confirmDelBtn.addEventListener('click', () => { 
+  if ( currentCardElement && currentCardId) {  
+    removeCard(currentCardElement[0], currentCardId[0]);
+    currentCardElement.length = 0;
+    currentCardId.length = 0;
+    }
+  }) 
 
 newAvatarForm.addEventListener('submit', handleAvatarFormSubmit)
 editForm.addEventListener('submit', handleEditFormSubmit);

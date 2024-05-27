@@ -3,51 +3,44 @@ import { closeModal, openModal } from "./modal";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const deletePopup = document.querySelector('.popup_type_delete');
-const delBtn = document.querySelector('.delete_btn');
-let currentCardElement = null;
-let currentCardId = null;
+const confirmDelBtn = document.querySelector('.delete_btn');
+const currentCardElement = [] ;
+const currentCardId = [];
 
 // Функция создания карточки
-function createCard (cardData, onDelete, OnLike, openImgModal, currentUserId) {
-  const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
-  const cardDelButton = cardElement.querySelector('.card__delete-button');
-  const likeBtn = cardElement.querySelector('.card__like-button');
-  const cardImage = cardElement.querySelector('.card__image');
-  const likeCount = cardElement.querySelector('.like_card_count');
-  
-  cardElement.querySelector('.card__title').textContent = cardData.title;
-  cardImage.alt = cardData.title;
-  cardImage.src = cardData.image;
-  likeCount.textContent = cardData.likes.length;
+function createCard (cardData, onLike, openImgModal, currentUserId) { 
+  const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true); 
+  const cardDelButton = cardElement.querySelector('.card__delete-button'); 
+  const likeBtn = cardElement.querySelector('.card__like-button'); 
+  const cardImage = cardElement.querySelector('.card__image'); 
+  const likeCount = cardElement.querySelector('.like_card_count'); 
+   
+  cardElement.querySelector('.card__title').textContent = cardData.title; 
+  cardImage.alt = cardData.title; 
+  cardImage.src = cardData.image; 
+  likeCount.textContent = cardData.likes.length; 
+ 
+  if (cardData.owner._id === currentUserId) { 
+    cardDelButton.addEventListener('click', () => { 
+      openModal(deletePopup) 
+      currentCardElement.push(cardElement); 
+      currentCardId.push(cardData._id); 
+    }); 
+  } else { 
+    cardDelButton.style.display = 'none'; 
+  } 
+  if (cardData.likes.some(user => user._id === currentUserId)) { 
+    likeBtn.classList.add('card__like-button_is-active'); 
+  } 
 
-  if (cardData.owner._id === currentUserId) {
-    cardDelButton.addEventListener('click', () => {
-      openModal(deletePopup)
-      currentCardElement = cardElement;
-      currentCardId = cardData._id;
-      delBtn.addEventListener('click', () => {
-        if (currentCardElement && currentCardId) {
-          onDelete(currentCardElement, currentCardId);
-          currentCardElement = null;
-          currentCardId = null;
-        }
-      })
-    });
-  } else {
-    cardDelButton.style.display = 'none';
-  }
-  if (cardData.likes.some(user => user._id === currentUserId)) {
-    likeBtn.classList.add('card__like-button_is-active');
-  }
-
-  likeBtn.addEventListener('click', (event) => {
-    likeCardBtn(event.target, cardData._id, likeCount);
-  });
-  cardImage.addEventListener('click', () => {
-    openImgModal(cardData)
-  })
-
-  return cardElement
+  likeBtn.addEventListener('click', (event) => { 
+    onLike(event.target, cardData._id, likeCount); 
+  }); 
+  cardImage.addEventListener('click', () => { 
+    openImgModal(cardData) 
+  }) 
+ 
+  return cardElement 
 };
 
 // Функция удаления карточки
@@ -55,11 +48,11 @@ function removeCard(cardElement, cardId) {
   deleteCard(cardId)
     .then(() => {
       cardElement.remove();
+      closeModal(deletePopup)
     })
     .catch(err => {
       console.error(`Не удалось удалить карточку: ${err}`);
     });
-    closeModal(deletePopup)
 }
 
 
@@ -79,4 +72,4 @@ function likeCardBtn(likeBtn, cardId, likeCountElement) {
 
 
 
-export {createCard, removeCard, likeCardBtn}
+export {createCard, removeCard, likeCardBtn, confirmDelBtn, currentCardElement, currentCardId}

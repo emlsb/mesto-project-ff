@@ -87,8 +87,6 @@ function clearValidation(formElement, config) {
     hideInputError(formElement, inputElement, config);
   });
 
-  buttonElement.disabled = true;
-
   toggleButtonState(inputList, buttonElement, config);
 }
 
