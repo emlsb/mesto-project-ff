@@ -61,7 +61,7 @@ Promise.all([getProfile(), getInitialCards()])
         likes: cardData.likes,
         _id: cardData._id,
         owner: cardData.owner
-      }, removeCard, likeCardBtn, openImgModal, currentUserId);
+      }, likeCardBtn, openImgModal, currentUserId);
       cardsContainer.append(card);
     });
   })
@@ -128,7 +128,7 @@ function addCard(evt) {
         likes: cardData.likes,
         _id: cardData._id,
         owner: cardData.owner
-      }, removeCard, likeCardBtn, openImgModal, cardData.owner._id); 
+      }, likeCardBtn, openImgModal, cardData.owner._id); 
       cardsContainer.prepend(card);
       closeModal(addCardPopup);
     })

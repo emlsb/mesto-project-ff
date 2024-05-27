@@ -8,7 +8,7 @@ const currentCardElement = [] ;
 const currentCardId = [];
 
 // Функция создания карточки
-function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) { 
+function createCard (cardData, onLike, openImgModal, currentUserId) { 
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true); 
   const cardDelButton = cardElement.querySelector('.card__delete-button'); 
   const likeBtn = cardElement.querySelector('.card__like-button'); 
@@ -32,14 +32,7 @@ function createCard (cardData, onDelete, onLike, openImgModal, currentUserId) {
   if (cardData.likes.some(user => user._id === currentUserId)) { 
     likeBtn.classList.add('card__like-button_is-active'); 
   } 
-  
-  // confirmDelBtn.addEventListener('click', () => { 
-  //   if (currentCardElement && currentCardId) { 
-  //     onDelete(currentCardElement, currentCardId); 
-  //     currentCardElement = null; 
-  //     currentCardId = null; 
-  //     } 
-  //   }) 
+
   likeBtn.addEventListener('click', (event) => { 
     onLike(event.target, cardData._id, likeCount); 
   }); 
