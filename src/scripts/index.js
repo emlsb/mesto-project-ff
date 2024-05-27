@@ -69,6 +69,8 @@ Promise.all([getProfile(), getInitialCards()])
     console.error(error);
 });
 
+
+
 // Редактирование формы профиля
 function handleEditFormSubmit(evt) {
   evt.preventDefault();
